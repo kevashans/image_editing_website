@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/main.css" rel="stylesheet" type="text/css"/>
+        <script src="js/script.js" type="text/javascript"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com"> 
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+        <link href="https://fonts.googleapis.com/css2?family=Akshar&display=swap" rel="stylesheet">
+        <title>Image Editing Website</title>
+
+    </head>
+
+    <body>
+        <div class="bodyWrap">
+            <div class="header">
+                <div id="siteModes">
+                    <input type="radio" id="lightMode" class="lightMode" name="switchMode" onchange="switchMode('light')" default/>
+                    <label for="darkMode">Light Mode</label>
+                    <input type="radio" id="darkMode" class="darkMode" name="switchMode" onchange="switchMode('dark')"/>
+                    <label for="darkMode">Dark Mode</label>
+                    <input type="radio" id="rainbowMode" class="rainbowMode" name="switchMode" onchange="switchMode('rainbow')"/>
+                    <label for="rainbowMode">Rainbow Mode</label>
+                    <input type="radio" id="customMode" class="customMode" name="switchMode" onchange="switchMode('custom')"/>
+                    <label for="darkMode">Custom Mode</label>
+                    <input type="color" id="bgColorPicker" class="bgColorPicker" name="switchMode" value="#FFFFFF" onchange="setBgColor(this.value)"/>
+                </div>
+            </div>
+            <div class="menuWrap">
+                <div class="menu">
+                    <button class="tab" id="imgTab" onclick="openTab(event, 'imageTab')">Image</button>
+                    <button class="tab" id="tadTab" onclick="openTab(event, 'textDrawTab')">Text & Draw</button>
+                    <button class="tab" id="impTab" onclick="openTab(event, 'importTab')">Import</button>
+                    <button class="tab" id="expTab" onclick="openTab(event, 'exportTab')">Export</button>
+                </div>
+
+                <div id="imageTab" class="content">
+                    <ul>
+                        <h1>Image</h1>
+                        <li><label class="rotationLabel" for="rotationRange">Rotation</label>
+                            <input type="range" id="rotationRange" class="rangeInput" value="0" min="0" max="360" oninput = "setRotationDegrees(this.value)"/>
+                        </li>
+                        <li><label class="brightnessLabel" for="brightnessRange">Brightness</label><input type="range" id="brightnessRange"  class="rangeInput" value="0" min="-255" max="255" oninput = "setBrightness(this.value)"/><input type="button" id="resetBtnBrightness" class="resetBtn" value="RESET" onclick="resetValues('brightness')" /></li>
+                        <li><label class="brightnessLabel" for="brightnessRed">Red:</label><input type="range" id="brightnessRed"  class="rangeInput" value="0" min="-255" max="255" oninput = "updateBrightnessLevel()"/><input type="button" id="resetBtnRed" class="resetBtn" value="RESET" onclick="resetValues('red')" /></li>
+                        <li><label class="brightnessLabel" for="brightnessGreen">Green:</label><input type="range" id="brightnessGreen"  class="rangeInput" value="0" min="-255" max="255" oninput = "updateBrightnessLevel()"/><input type="button" id="resetBtnGreen" class="resetBtn" value="RESET" onclick="resetValues('green')" /></li>
+                        <li><label class="brightnessLabel" for="brightnessBlue">Blue:</label><input type="range" id="brightnessBlue"  class="rangeInput" value="0" min="-255" max="255" oninput = "updateBrightnessLevel()"/><input type="button" id="resetBtnBlue" class="resetBtn" value="RESET" onclick="resetValues('blue')"/></li>
+                        <li>
+                            <label for="filters">Choose a filter:</label>
+                            <select id="filters" name="filters" onchange="filterChoose(this.value)">
+                                <option	value="none" selected>None</option>
+                                <option value="sepia">Sepia</option>
+                                <option value="invert">Invert</option>
+                                <option value="posterize">Posterize</option>
+                                <option value="threshold">Threshold</option>
+                            </select>
+                        </li>
+                        <li>
+                            <label class="switch">
+                                <input type="checkbox" onchange="newGreyScale(this.checked)">
+                                <span class="slider round"></span>
+                            </label>
+                        </li>
+                        <li>
+                            <label for="convolutionType">Convolution Type </label>
+                            <select name="menu" id="convolutionType" onchange="convolutionChoose(this.value)">
+                                <option value="none">None</option>
+                                <option value="emboss">Emboss</option>
+                                <option value="blur">Blur</option>
+                                <option value="sharpen">Sharpen</option>
+                                <option value="edge">Edge</option>
+                            </select>
+                        </li>
+                        <li>
+                            <select id='alphaSelection' onChange="renderCanvas()">
+                                <option value="source-in">source-in</option>
+                                <option value="source-out">source-out</option>
+                                <option value="source-atop">source-atop</option>
+                                <option value="source-over">source-over</option>
+                                <option value="destination-in">destination-in</option>
+                                <option value="destination-out">destination-out</option>
+                                <option value="destination-atop">destination-atop</option>
+                                <option value="destination-over">destination-over</option>
+                                <option value="lighter">lighter</option>
+                                <option value="darker">darker</option>
+                                <option value="xor">xor</option>
+                                <option value="copy">copy</option>
+                            </select>
+                        </li>
+                        <li>
+                            <input type="button" onclick="putForward()">put forward
+                            <input type="button" onclick="putBehind()">put behind
+                            <input type="button" onclick="remove()">remove
+                        </li>
+                    </ul>
+                </div>
+                <div id="textDrawTab" class="content">
+                    <ul>
+                        <li><h1>Text & Draw</h1></li>
+                        <li><label for="drawMode">Draw</label><input type="checkbox" value="draw mode" id="drawMode" onclick="drawMode(this.checked)"></li>
+                        <li><label for="drawTextMode">Draw Text</label><input type="checkbox" value="draw text mode" id="drawTextMode" onclick="drawTextMode(this.checked)"></li>
+                        <li><label for="penTypePicker" class="penSettings"><select>
+                                    <option value="pen">Pen</option>
+                                </select></label></li>
+                        <li><label for="penSizePicker" class="penSettings">Pen Size</label><input type="range" id="penSizePicker" class="penSettings" value="0.5" min="0.05" max="70" step="0.5" oninput="setPenSize(this.value)"/><span id="dot" class="penSettings"></span></li>
+                        <li><label for="penColorP/icker" class="penSettings" >Pen Color</label><input type="color" id="penColorPicker" class="penSettings" value="#000000" oninput="setPenColor(this.value)"/></li>
+                        <li>        <input id="theText" type="text">
+                            <button id="submit" onclick="getText()">Draw text on canvas</button><br></li>
+                        <li><label for="borderColor" class="textSettings">Border Color</label><input name="Color Picker" id="borderColor" type="color"/></li>
+                        <li><label for="fillColor" class="textSettings">Fill Color</label><input name="Color Picker" id="fillColor" type="color"/></li>
+                        <li><input type="button"onclick="clearCanvas2()"> Clear Drawing</li>
+                        <li>
+                            <input type="button" onclick="removeText()">remove</input>
+                        </li>
+                    </ul>
+
+                </div>
+                <div id="importTab" class="content">
+                    <ul>
+                        <li><h1>Import</h1></li>
+                        <li><label>Image File:</label><input type="file" id="imageLoader" name="imageLoader"/></label></li>
+                    </ul>
+                </div>
+                <div id="exportTab" class="content">
+                    <ul>
+                        <li><h1>Export</h1></li>
+                        <li><label id="projectNameLabel" for="projectName">
+                                <input type="text" class="projectName" id="projectName" placeholder="Project1" oninput="updateProjectName(this.value)"/>
+                                <a id="saveImageFile" onclick="combineToCanvas1();
+                                           this.href = offscreenCanvas.toDataURL('image/png')"">Save Image</a>
+                            </label></li>
+                    </ul>
+
+                </div>
+            </div>
+            <canvas id="canvas2" class="canvas"></canvas>
+            <canvas id="canvas" class="canvas">
+                Your browser does not support the HTML5 'Canvas' tag.
+            </canvas>
+            <div class="layerWrap">
+                <div id="layer">
+                </div>
+            </div>
+            <div class="footer">
+
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
